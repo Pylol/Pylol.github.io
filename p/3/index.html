@@ -150,8 +150,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/07/10/http和https/">
-                HTTP和HTTPS协议
+              <a class="post-title-link" href="/2015/07/10/Composer/">
+                Composer
               </a>
             
           
@@ -167,7 +167,7 @@
           <span class="post-category">
             &nbsp; | &nbsp; 分类于
             
-              <a href="/categories/协议/">协议</a>
+              <a href="/categories/php/">php</a>
 
               
               
@@ -189,23 +189,10 @@
 
       
         
-          <h3 id="HTTP和HTTPS协议">HTTP和HTTPS协议</h3><p>　　HTTP和HTTPS协议是大家长期接触到的两个协议，在大家的熟知里，这两者的区别就在安全性，端口不同上。大家知道的都是体现在表层的东西，却不知道这背后的机制和原理。为什么HTTPS比HTTP安全，这个安全性源自哪里？</p>
-<h4 id="概念">概念</h4><p>　　超文本传输协议（HyperText Transfer Protocol， 简称：HTTP）。互联网上应用最为广泛的一种网络协议，它是一个客户端和服务端之间对话的标准，属于TCP/IP <strong>应用层</strong> 协议。一般情况下，web请求和响应都采用HTTP协议传输，HTTP协议默认不采用加密协议的原因有以下几个：加密消耗很多计算机资源；加密占更多的带宽，加密后缓存机制会失效。</p>
-<h4 id="区别">区别</h4><p>　　HTTPS是基于HTTP的安全超文本传输协议，用于客户机和服务器之间的信息交流。主要区别如下：</p>
-<ul>
-<li>连接方式不同，HTTP端口80，HTTPS端口443。</li>
-<li>HTTPS协议需要申请证书。</li>
-<li>HTTP协议传输过程中以明文传递，HTTPS传输过程中则通过安全的ssl加密传递。</li>
-<li>HTTPS是由SSL+HTTP构建的安全的网络传输协议，比HTTP协议安全性高。</li>
-</ul>
-<h4 id="工作原理">工作原理</h4><p>　　HTTP的工作原理在之前的TCP/IP协议中已经记录过，基于TCP/IP协议三次握手后建立连接。而HTTPS的连接方式要比HTTP复杂一些，大致流程如下：<br>① 浏览器发送一个连接请求给安全服务器。<br>② 采用HTTPS协议的服务器必须有一套自己的数字证书，用户客户端的验证。接收到HTTPS请求后，服务器将自己的证书，以及同证书相关的信息（包含公钥，证书有效期，颁发机构等）发送给客户浏览器。<br>③ 客户浏览器检查服务器送过来的证书是否是由自己信赖的 CA 中心所签发的。如果是，就继续执行协议；如果不是，客户浏览器就给客户一个警告消息：警告客户这个证书不是可以信赖的，询问客户是否需要继续。<br>④ 接着客户浏览器比较证书里的消息，例如域名和公钥，与服务器刚刚发送的相关消息是否一致，如果是一致的，客户浏览器认可这个服务器的合法身份。<br>⑤ 服务器要求客户发送客户自己的证书（公钥）。收到后，服务器验证客户的证书，如果没有通过验证，拒绝连接；如果通过验证，服务器获得用户的公钥。<br>⑥ 客户浏览器告诉服务器自己所能够支持的通讯对称密码方案。<br>⑦ 服务器从客户发送过来的密码方案中，选择一种加密程度最高的密码方案，用客户的公钥加过密后通知浏览器。<br>⑧ 浏览器针对这个密码方案，选择一个通话密钥，接着用服务器的公钥加过密后发送给服务器。<br>⑨ 服务器接收到浏览器送过来的消息，用自己的私钥解密，获得通话密钥。<br>⑩ 服务器、浏览器接下来的通讯都是用对称密码方案，对称密钥是加过密的。<br><img src="http://int64ago.qiniudn.com/1cqm0nyntrzfr.png" alt="图1"><br><img src="http://int64ago.qiniudn.com/yg8zt3px2yb9.png" alt="图2"><br>大致的交互过程就是：首先客户机和服务器之间通过交换证书（公钥），然后通过非对称加密方式交换密钥，没有问题后使用对称加密方式进行通信。<br>双方相互信任后采用对称加密算法应该是因为对称加密算法计算量小、加密速度快、加密效率高。</p>
-<p>文献资料：</p>
-<ul>
-<li><a href="http://www.ruanyifeng.com/blog/2011/02/seven_myths_about_https.html" target="_blank" rel="external">HTTPS的七大误解</a></li>
-<li><a href="http://www.cnblogs.com/TankXiao/archive/2012/02/13/2342672.html" target="_blank" rel="external">HTTP协议系列讲解</a></li>
-<li><a href="http://www.ruanyifeng.com/blog/2014/02/ssl_tls.html" target="_blank" rel="external">SSL/TLS协议运行机制</a></li>
-</ul>
-
+          <p><a href="http://www.phpcomposer.com/" target="_blank" rel="external">Composer中文网</a><br><a href="https://github.com/5-say/composer-doc-cn" target="_blank" rel="external">Composer-doc-cn</a><br><a href="http://segmentfault.com/a/1190000000355928" target="_blank" rel="external">PHP开发者应该知道的5个Composer小技巧</a></p>
+<h4 id="Composer">Composer</h4><p>　　Composer是个非常实用的工具，在项目开发过程中，项目会对许多包或者库的版本有所依赖，所以Composer就是这样一个对项目的依赖进行管理的工具。</p>
+<h4 id="安装">安装</h4><p><a href="https://github.com/5-say/composer-doc-cn/blob/master/cn-introduction/01-basic-usage.md#安装" target="_blank" rel="external">Composer安装</a></p>
+<h4 id="命令及参数">命令及参数</h4><table><thead><th>脚本</th><th>命令</th><th>描述</th><th>参数</th><th>参数描述</th></thead><tbody><tr><td rowspan="40">php composer.phar</td><td rowspan="7">init</td><td rowspan="7">以交互的方式创建composer.json文件</td><td>—name</td><td>包的名称</td></tr><tr><td>—description</td><td>包的描述</td></tr><tr><td>—author</td><td>包的作者</td></tr><tr><td>—homepage</td><td>包的主页</td></tr><tr><td>—require</td><td>需要依赖的其他包，必须要有一个版本约束 格式：foo/bar:1.0.0</td></tr><tr><td>—require-dev</td><td>开发版的依赖包，内容格式与—require相同</td></tr><tr><td>—stability(-s)</td><td>minimum-stability 字段的值</td></tr><tr><td rowspan="9">install</td><td rowspan="9">读取composer.json文件， 处理历来关系并安装到vendar目录下</td><td>—prefer-source</td><td>从source安装（如果有的话）</td></tr><tr><td>—prefer-dist</td><td>从dist安装</td></tr><tr><td>—dry-run</td><td>模拟，并非实际安装</td></tr><tr><td>—dev</td><td>安装require-dev字段中列出来的包</td></tr><tr><td>—no-dev</td><td>跳过require-dev字段列出的包</td></tr><tr><td>—no-scripts</td><td>跳过composer.json文件中定义的脚本</td></tr><tr><td>—no-plugins</td><td>关闭plugins</td></tr><tr><td>—no-progress</td><td>移除进度信息</td></tr><tr><td>—optimize-autoloadder(-o)</td><td>转换 PSR-0/4 autoloading 到 classmap 可以获得更快的加载支持</td></tr><tr><td rowspan="3">update</td><td rowspan="3">升级composer.lock文件</td><td></td><td>所有install相关的参数均可使用</td></tr><tr><td>—lock</td><td>仅更新 lock 文件的 hash，取消有关 lock 文件过时的警告。</td></tr><tr><td>—with-dependencies</td><td>同时更新白名单内包的依赖关系，这将进行递归更新。</td></tr><tr><td rowspan="6">require</td><td rowspan="6">增加新的依赖包到当前composer.json文件中</td><td>—prefer-source</td><td>从bsource安装（如果有的话）</td></tr><tr><td>—prefer-dist</td><td>从dist安装</td></tr><tr><td>—dev</td><td>安装require-dev字段中列出来的包</td></tr><tr><td>—no-update</td><td>禁止依赖关系的更新</td></tr><tr><td>—no-progress</td><td>移除进度信息</td></tr><tr><td>—update-with-dependencies</td><td>一并更新新装包的依赖</td></tr><tr><td>global</td><td>安装全局应用 php composer.phar global require fabpot/php-cs-fixer:dev-master</td><td></td><td></td></tr><tr><td>search</td><td>搜索依赖包</td><td>—only-name</td><td>仅针对指定的名称搜索(完全匹配)</td></tr><tr><td rowspan="3">show</td><td rowspan="3">列表软件包的信息</td><td>—installed(-i)</td><td>列出已安装的依赖包</td></tr><tr><td>—platform(-p)</td><td>仅列出平台软件包（PHP与他的扩展）</td></tr><tr><td>—self(-s)</td><td>仅列出当前项目信息</td></tr><tr><td>depends</td><td>检查已安装的某个包，是否正在被其它包所依赖</td><td>—link-type</td><td>检查的类型，默认为require也可以是require-dev</td></tr><tr><td>validate</td><td>检查composer.json文件是否有效</td><td>—no-check-all</td><td>是否完全检测</td></tr><tr><td>status</td><td>检测source依赖包，提示任何本地更改的地方 可以使用—verbose系列参数获取详细的信息</td><td></td><td></td></tr><tr><td rowspan="2">self-update</td><td rowspan="2">将Composer自身升级到最新版本</td><td>—rollback</td><td>回滚到你已经安装的最后一个版本</td></tr><tr><td>—clean-backups</td><td>更新过程中删除旧的备份，这使得更新过后的当前版本是唯一可用版本</td></tr><tr><td rowspan="5">config</td><td rowspan="5">编辑Composer基本配置 config [options] [setting-key] [setting-value1] … [setting-valueN]</td><td>—global (-g)</td><td>操作位于 $COMPOSER_HOME/config.json 的全局配置文件。如果不指定该参数，此命令将影响当前项目的 composer.json 文件，或 —file 参数所指向的文件。</td></tr><tr><td>—editor (-e)</td><td>使用文本编辑器打开 composer.json 文件。默认情况下始终是打开当前项目的文件。当存在 —global参数时，将会打开全局 composer.json 文件。</td></tr><tr><td>—unset</td><td>移除有setting-key指定名称的配置项</td></tr><tr><td>—list (-l)</td><td>显示当前配置选项的列表。当存在 —global 参数时，将会显示全局配置选项的列表。</td></tr><tr><td>—file=”…” (-f)</td><td>在一个指定的文件上操作，而不是 composer.json。注意：不能与 —global 参数一起使用</td></tr></tbody></table>
         
       
     </div>
@@ -235,8 +222,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/07/10/TCP-IP协议基础/">
-                TCP/IP协议基础
+              <a class="post-title-link" href="/2015/07/10/nginx的rewrite规则与实例/">
+                nginx的rewrite规则与实例
               </a>
             
           
@@ -252,7 +239,7 @@
           <span class="post-category">
             &nbsp; | &nbsp; 分类于
             
-              <a href="/categories/协议/">协议</a>
+              <a href="/categories/nginx/">nginx</a>
 
               
               
@@ -274,18 +261,45 @@
 
       
         
-          <h4 id="一、TCP/IP是什么？">一、TCP/IP是什么？</h4><p>　　全称：传输控制协议（Transmission Control Protocol）/互联网协议（Internet Protocol）<br>　　它可以指代一个TCP/IP参考模型，也可以指代一个协议，也可以指代一个协议族。</p>
+          <h3 id="nginx的rewrite规则与实例">nginx的rewrite规则与实例</h3><p>　　nginx相关指令有if、rewrite、set、return、break等。</p>
+<h4 id="break">break</h4><p>　　默认值：none ;使用环境：server,location,if ;<br>　　该指令的作用是完成当前的规则集，不再处理rewrite指令。</p>
+<h4 id="if">if</h4><p>　　默认值：none ;使用环境：server,location<br>　　该指令用于检查一个条件是否符合，如果条件符合，则执行大括号内的语句。If指令不支持嵌套，不支持多个条件&amp;&amp;和||处理。</p>
 <ul>
-<li><strong>TCP/IP参考模型</strong><br><img src="http://int64ago.qiniudn.com/or7sbdquxr.png" alt="图1"><br>每一层均有许多不同的协议组成，各层实现各自的功能时，可以使用直接下层提供的服务，同时也要给直接上层提供服务。</li>
-<li><strong>TCP/IP协议族</strong><br>指整个网络传输协议的集合</li>
-<li><strong> TCP/IP协议 </strong><br>TCP协议位于第四层传输层；IP协议，又称网际协议或互联网协议，位于第三层</li>
+<li>A. 变量名，错误的值包括：空字符串””或者任何以0开始的字符串</li>
+<li>B. 变量比较可以使用”=”(表示等于)和”!=”(表示不等于)</li>
+<li>C. 正则表达式模式匹配可以使用”~*”和”~”符号</li>
+<li>D. “~”符号表示区分大小写字母的匹配</li>
+<li>E. “~*”符号表示不区分大小写字母的匹配</li>
+<li>F. “!~”和”!~<em>“符号的作用刚好和”~”、”~</em>“相反，表示不匹配</li>
+<li>G. “-f”和”!-f”用来判断文件是否存在</li>
+<li>H. “-d”和”!-d”用来判断目录是否存在</li>
+<li>I. “-e”和”!-e”用来判断文件或目录是否存在</li>
+<li>J. “-x”和”!-x”用来判断文件是否为可执行</li>
+<li>K. 部分正则表达式可以在()内，用$1~$9来访问</li>
 </ul>
-<h4 id="二、为什么会有TCP/IP协议？">二、为什么会有TCP/IP协议？</h4><p>　　互联网由许多个小网络组成，每个小网络都有自己的结构和规则，就相当于世界各地的“方言”，当两个不同区域的人相遇时就会交流困难，为了解决交流问题就需要一门“世界语”，而这门“世界语”就是TCP/IP协议。</p>
-<h4 id="三、TCP/IP工作原理">三、TCP/IP工作原理</h4><ul>
-<li><strong>各层协议之间的协作关系</strong><br><img src="http://int64ago.qiniudn.com/qt6prk71iqkt9.jpg" alt="图2"></li>
-<li><strong>数据包的封装与解封</strong><br><img src="http://int64ago.qiniudn.com/f76khcvezsemi.jpg" alt="图3"><br>　　当应用程序调用TCP或者UDP协议发送数据包时，用户数据被送入TCP/IP协议栈，自上而下通过每一层，直到数据转为一串比特流被送入网络。在每一层接收到数据后，都会加上一些头部信息或者尾部信息以完成数据包的封装。<br><img src="http://int64ago.qiniudn.com/dhgh5nu1y8pvi.jpg" alt="图4"><br>　　拆封过程则是自下而上一层一层的拆开每一层的首部信息，最后得到被传输的应用数据</li>
-</ul>
-<h4 id="四、三次握手">四、三次握手</h4><p>　　TCP协议是针对主机对主机的传输层协议，提供可靠的连接服务，采用三次握手确认建立一个连接。<br><img src="http://int64ago.qiniudn.com/57eylmhkc5wmi.png" alt="图5"><br>　　通过wireshark捕捉网络数据包，结果如下：<br><img src="http://int64ago.qiniudn.com/cyzubjp58kt9.jpg" alt="图6"><br>　　115.231.94.62即 class.oschina.mopaas.com的主机地址。通过数据显示能够发现，在建立HTTP连接之前先建立了TCP连接，这说明http协议是建立在tcp协议基础之上的。<br>Seq：Sequence Number 序列号。<br>Ack：Acknowledgement Number 确定号。<br>1、（第一次握手）在No.8961中，本地主机发送[SYN]数据报，序列号Seq=0，代表本地主机，即客户端通过端口51344请求远程主机端口80建立连接。<br>2、（第二次握手）在No.8962中，远程主机发送[SYN+ACK]报文，序列号Seq=0，确定号Ack=1(Seq+1)，回复本地主机。<br>3、（第三次握手）在No.8963中，本地主机接到远程主机的回复后，发送ACK报文，序列号Seq=1，确定号Ack=1，回复远程主机。<br>4、TCP连接成功，建立HTTP连接。</p>
+<h4 id="return">return</h4><p>　　语法：return code ;使用环境：server,location,if ;<br>　　该指令用于结束规则的执行并返回状态码给客户端。<br>　　示例：如果访问的URL以”.sh”或”.bash”结尾，则返回403状态码<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">　　<span class="title">location</span> <span class="regexp">~ .*\.(sh|bash)?$</span></span><br><span class="line">　　&#123;</span><br><span class="line">　　<span class="title">return</span> <span class="number">403</span>;</span><br><span class="line">　　&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="rewrite">rewrite</h4><p>　　语法：rewrite regex replacement flag<br>　　默认值：none ; 使用环境：server,location,if<br>　　<br>　　该指令根据表达式来重定向URI，或者修改字符串。指令根据配置文件中的顺序来执行。注意重写表达式只对相对路径有效。如果你想配对主机名，你应该使用if语句，示例如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>( <span class="variable">$host</span> ~* www\.(.*) )</span><br><span class="line">&#123;</span><br><span class="line"><span class="built_in">set</span> <span class="variable">$host_without_www</span> <span class="variable">$1</span>;</span><br><span class="line">rewrite  ^(.*)$  http://<span class="variable">$host_without_www</span><span class="variable">$1</span> permanent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>　　<strong>rewrite指令的最后一项参数为flag标记，支持flag标记有：</strong><br>　　1.<strong>last</strong>     相当于apache里面的[L]标记，表示rewrite。<br>　　2.<strong>break</strong> 本条规则匹配完成后，终止匹配，不再匹配后面的规则。<br>　　3.<strong>redirect</strong>   返回302临时重定向，浏览器地址会显示跳转后的URL地址。<br>　　4.<strong>permanent</strong>  返回301永久重定向， 浏览器地址会显示跳转后的URL地址。</p>
+<p>　　使用last和break实现URI重写，浏览器地址栏不变。而且两者有细微差别，使用alias指令必须用last标记;使用proxy_pass指令时，需要使用break标记。Last标记在本条rewrite规则执行完毕后，会对其所在server{……}标签重新发起请求，而break标记则在本条规则匹配完成后，终止匹配。</p>
+<p>　　一般在跟location中(location /{…})或直接在server标签中编写rewrite规则，推荐使用last标记；在非根location中(location /cms/{…})，则使用break。</p>
+<p>　　如果URI中含有参数(/app/test.php?id=5)，默认情况下参数会被自动附加到替换串上，你可以通过在替换串的末尾加上?标记来解决这一问题。<br>　　例如：rewrite ^/test(.*)$ <a href="http://www.xiaozhe.com/home" target="_blank" rel="external">http://www.xiaozhe.com/home</a> permanent;<br>　　访问<a href="http://www.xiaozhe.com/test?id=5" target="_blank" rel="external">http://www.xiaozhe.com/test?id=5</a> 会跳转到 <a href="http://www.xiaozhe.com/home?id=5" target="_blank" rel="external">http://www.xiaozhe.com/home?id=5</a></p>
+<p>　　例如：如果我们将类似URL /photo/123456 重定向到 /path/to/photo/12/1234/123456.png<br>　　Rewrite “/photo/([0-9]{2})([0-9]{2})([0-9]{2})” /path/to/photo/$1/$1$2/$1$2$3.png ;<br>　　注：如果正则表达式里面有花括号”{“或”}” ，应该使用双引号或单引号。</p>
+<h4 id="set">set</h4><p>　　语法：set variable value ; 默认值:none ; 使用环境：server,location,if;<br>　　该指令用于定义一个变量，并给变量赋值。变量的值可以为文本、变量以及文本变量的联合。<br>　　示例：set $varname “hello world”;</p>
+<h4 id="Uninitialized_variable_warn">Uninitialized_variable_warn</h4><p>　　语法：uninitialized_variable_warn on|off<br>　　使用环境：http,server,location,if<br>　　该指令用于开启和关闭未初始化变量的警告信息，默认值为开启。</p>
+<h4 id="Nginx_Rewrite可以用到的全局变量">Nginx Rewrite可以用到的全局变量</h4><p>$args ,$content_length ,$content_type ,$document_root ,$document_uri ,$host ,$http_user_agent ,$http_cookie ,$limit_rate ,$request_body_file ,$request_method ,$remote_addr ,$remote_port ,$remote_user ,$request_filename ,$request_uri ,$query_string ,$scheme ,$server_protocol ,$server_addr ,$server_name ,$server_port ,$uri .</p>
+<h4 id="Nginx的Rewrite规则编写实例">Nginx的Rewrite规则编写实例</h4><p>1.当访问的文件和目录不存在时，重定向到某个php文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>( !<span class="operator">-e</span> <span class="variable">$request_filename</span> )</span><br><span class="line">&#123;</span><br><span class="line">rewrite ^/(.*)$ index.php last;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>2.目录对换 /123456/xxxx  ====&gt;   /xxxx?id=123456<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">rewrite</span><span class="regexp"> ^/(\d+)/(.+)/</span>  /<span class="variable">$2</span>?id=<span class="variable">$1</span> <span class="built_in">last</span>;</span><br></pre></td></tr></table></figure></p>
+<p>3.如果客户端使用的是IE浏览器，则重定向到/ie目录下<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>( <span class="variable">$http_user_agent</span>  ~ <span class="constant">MSIE</span>)</span><br><span class="line">&#123;</span><br><span class="line">rewrite ^(.*)<span class="variable">$ </span>/ie/<span class="variable">$1</span> <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>4.禁止访问多个目录<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">location ~ ^<span class="regexp">/(cron|templates)/</span></span><br><span class="line">&#123;</span><br><span class="line">deny all;</span><br><span class="line"><span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>5.禁止访问以/data开头的文件<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">location</span> <span class="regexp">~ ^/data</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="title">deny</span> all;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>6.禁止访问以.sh,.flv,.mp3为文件后缀名的文件<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location ~ .<span class="keyword">*</span>\.(sh|<span class="string">flv</span>|<span class="string">mp3)$</span><br><span class="line">&#123;</span><br><span class="line">return 403;</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure></p>
+<p>7.设置某些类型文件的浏览器缓存时间<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">location ~ .<span class="keyword">*</span>\.(gif|<span class="string">jpg</span>|<span class="string">jpeg</span>|<span class="string">png</span>|<span class="string">bmp</span>|<span class="string">swf)$</span><br><span class="line">&#123;</span><br><span class="line">expires 30d;</span><br><span class="line">&#125;</span><br><span class="line">location ~ .*\.(js</span>|<span class="string">css)$</span><br><span class="line">&#123;</span><br><span class="line">expires 1h;</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="Nginx和Apache的Rewrite规则实例对比">Nginx和Apache的Rewrite规则实例对比</h4><p>1.一般简单的Nginx和Apache规则的区别不大，基本能够完全兼容，例如：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">Apache:</span> RewriteRule  ^<span class="regexp">/abc/</span>$   <span class="regexp">/web/</span>abc.php [L] </span><br><span class="line"><span class="string">Nginx:</span>  rewrite  ^<span class="regexp">/abc/</span>$  <span class="regexp">/web/</span>abc.php last ;</span><br></pre></td></tr></table></figure></p>
+<p>我们可以看出来只要把Apache的RewriteRule改为Nginx的rewrite，Apache的[L]改为last 即可。<br>如果将Apache的规则改为Nginx规则后，用命令Nginx -t 检查发现错误，则我们可以尝试给条件加上引号，例如：<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rewrite “^/([<span class="number">0</span>-<span class="number">9</span>]&#123;<span class="number">5</span>&#125;).html$”   /x.php?<span class="property">id</span>=$<span class="number">1</span> <span class="keyword">last</span>;</span><br></pre></td></tr></table></figure></p>
+<p>2.Apache和Nginx的Rewrite规则在URL跳转时有细微区别：<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">Apache:</span>  <span class="constant">RewriteRule </span>^<span class="regexp">/html/</span>([a-zA-<span class="constant">Z]</span>+)/.*<span class="variable">$ </span> /<span class="variable">$1</span>/  [<span class="constant">R=</span><span class="number">301</span>,<span class="constant">L]</span></span><br><span class="line"><span class="constant">Nginx:</span>   rewrite ^<span class="regexp">/html/</span>([a-zA-<span class="constant">Z]</span>+)/.*<span class="variable">$ </span> <span class="symbol">http:</span>/<span class="regexp">/$host/</span><span class="variable">$1</span>/ premanent ;</span><br></pre></td></tr></table></figure></p>
+<p>我们可以看到在Nginx的跳转中，我们需要加上<a href="http://$host，这是在Nginx中强烈要求的。" target="_blank" rel="external">http://$host，这是在Nginx中强烈要求的。</a></p>
+<p>3.下面是一些Apache和Nginx规则的对应关系<br><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby"> a. <span class="constant">Apache</span>的<span class="constant">RewriteCond</span>对应<span class="constant">Nginx</span>的<span class="keyword">if</span></span><br><span class="line"></span>-<span class="ruby"> b. <span class="constant">Apache</span>的<span class="constant">RewriteRule</span>对应<span class="constant">Nginx</span>的rewrite</span><br><span class="line"></span>-<span class="ruby"> c. <span class="constant">Apache</span>的[<span class="constant">R</span>]对应<span class="constant">Nginx</span>的redirect</span><br><span class="line"></span>-<span class="ruby"> d. <span class="constant">Apache</span>的[<span class="constant">P</span>]对应<span class="constant">Nginx</span>的last</span><br><span class="line"></span>-<span class="ruby"> e. <span class="constant">Apache</span>的[<span class="constant">R</span>,<span class="constant">L</span>]对应<span class="constant">Nginx</span>的redirect</span><br><span class="line"></span>-<span class="ruby"> f. <span class="constant">Apache</span>的[<span class="constant">P</span>,<span class="constant">L</span>]对应<span class="constant">Nginx</span>的last</span><br><span class="line"></span>-<span class="ruby"> g. <span class="constant">Apache</span>的[<span class="constant">PT</span>,<span class="constant">L</span>]对应<span class="constant">Nginx</span>的last</span></span><br></pre></td></tr></table></figure></p>
+<p>例如：允许指定的域名访问本站，其他的域名一律转向www.xiaozhe.com<br><figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">Apache:</span><br><span class="line">RewriteCond <span class="variable">%&#123;HTTP_HOST&#125;</span> !^(.<span class="variable">*?</span>)\.aaa\.com$ [NC]</span><br><span class="line">RewriteCond <span class="variable">%&#123;HTTP_HOST&#125;</span> !^localhost$ </span><br><span class="line">RewriteCond <span class="variable">%&#123;HTTP_HOST&#125;</span> !^<span class="number">192</span>\.<span class="number">168</span>\.<span class="number">0</span>\.(.<span class="variable">*?</span>)$</span><br><span class="line">RewriteRule ^/(.<span class="variable">*)</span>$ http:<span class="comment">//www.xiaozhe.com [R,L]</span></span><br><span class="line"> </span><br><span class="line">Nginx:</span><br><span class="line"><span class="keyword">if</span>( <span class="variable">$host</span> ~* ^(.<span class="variable">*)</span>\.aaa\.com$ )</span><br><span class="line">&#123;</span><br><span class="line">set <span class="variable">$allowHost</span> ‘<span class="number">1</span>’;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>( <span class="variable">$host</span> ~* ^localhost )</span><br><span class="line">&#123;</span><br><span class="line">set <span class="variable">$allowHost</span> ‘<span class="number">1</span>’;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>( <span class="variable">$host</span> ~* ^<span class="number">192</span>\.<span class="number">168</span>\.<span class="number">1</span>\.(.<span class="variable">*?</span>)$ )</span><br><span class="line">&#123;</span><br><span class="line">set <span class="variable">$allowHost</span> ‘<span class="number">1</span>’;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>( <span class="variable">$allowHost</span> !~ ‘<span class="number">1</span>’ )</span><br><span class="line">&#123;</span><br><span class="line">rewrite ^/(.<span class="variable">*)</span>$ http:<span class="comment">//www.xiaozhe.com redirect ;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
         
       
@@ -309,7 +323,7 @@
 
   
   <div class="pagination">
-    <a class="extend prev" rel="prev" href="/p/2/">&laquo;</a><a class="page-number" href="/">1</a><a class="page-number" href="/p/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/p/4/">4</a><a class="page-number" href="/p/5/">5</a><a class="extend next" rel="next" href="/p/4/">&raquo;</a>
+    <a class="extend prev" rel="prev" href="/p/2/">&laquo;</a><a class="page-number" href="/">1</a><a class="page-number" href="/p/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/p/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/p/6/">6</a><a class="extend next" rel="next" href="/p/4/">&raquo;</a>
   </div>
 
 
@@ -343,7 +357,7 @@
         <div class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-count">11</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

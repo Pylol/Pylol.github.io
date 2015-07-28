@@ -22,7 +22,7 @@
 
 
 
-  <meta name="keywords" content="TCP,协议," />
+  <meta name="keywords" content="MySQL,数据库,数据类型," />
 
 
 
@@ -45,7 +45,7 @@
 
 
 
-  <title> TCP/IP协议基础 // Patrick </title>
+  <title> MySQL数据类型 // Patrick </title>
 </head>
 
 <body>
@@ -148,7 +148,7 @@
           
           
             
-              TCP/IP协议基础
+              MySQL数据类型
             
           
         </h1>
@@ -156,14 +156,22 @@
 
       <div class="post-meta">
         <span class="post-time">
-          发表于 2015-07-10
+          发表于 2015-07-28
         </span>
 
         
           <span class="post-category">
             &nbsp; | &nbsp; 分类于
             
-              <a href="/categories/协议/">协议</a>
+              <a href="/categories/MySQL/">MySQL</a>
+
+              
+              
+                ， 
+              
+
+            
+              <a href="/categories/MySQL/数据库/">数据库</a>
 
               
               
@@ -184,18 +192,22 @@
       
 
       
-        <h4 id="一、TCP/IP是什么？">一、TCP/IP是什么？</h4><p>　　全称：传输控制协议（Transmission Control Protocol）/互联网协议（Internet Protocol）<br>　　它可以指代一个TCP/IP参考模型，也可以指代一个协议，也可以指代一个协议族。</p>
+        <p>前面已经讲到过 <a href="http://pylol.github.io/2015/07/26/MySQL%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E9%80%89%E6%8B%A9/">MySQL数据类型选择</a> 的原则，前提是我们需要了解MySQL数据库的数据类型，以及他们之间的区别和效率，那么这篇文章就来说明MySQL数据类型。</p>
 <ul>
-<li><strong>TCP/IP参考模型</strong><br><img src="http://int64ago.qiniudn.com/or7sbdquxr.png" alt="图1"><br>每一层均有许多不同的协议组成，各层实现各自的功能时，可以使用直接下层提供的服务，同时也要给直接上层提供服务。</li>
-<li><strong>TCP/IP协议族</strong><br>指整个网络传输协议的集合</li>
-<li><strong> TCP/IP协议 </strong><br>TCP协议位于第四层传输层；IP协议，又称网际协议或互联网协议，位于第三层</li>
+<li><p><strong>整数类型</strong><br>整数类型包括<code>TINYINT(8 bit)</code>、<code>SMALLINT(16 bit)</code>、<code>MEDIUMINT(24 bit)</code>、<code>INT(32 bit)</code>、<code>BIGINT(64 bit)</code>。<br>整数类型的存储范围为(-2)^(N-1) ~ 2^(N-1)，N表示存储的位数。同时整数类型有<code>UNSIGNED</code>属性，表示不允许负数，这使得存储范围的上限提高一倍。<br>在存储上整数类型都是定长的，我们平时建表时定义的<code>INT(11)</code>表示数字显示长度而非存储长度，对于计算和存储来说<code>INT(1)</code>和<code>INT(11)</code>是一回事。</p>
+</li>
+<li><p><strong>实数类型</strong><br>实数类型包括<code>FLOAT(32 bit)</code>、<code>DOUBLE(64 bit)</code>、<code>DECIMAL</code>。<br>这些都是存储精确的小数数据。<code>DECIMAL</code>最多允许存储65个数字，它只是一种存储格式，由MySQL的服务器自身实现其高精度计算，在计算中<code>DECIMAL</code>会转换成<code>DOUBLE</code>类型计算。<br>实数运算是需要额外的空间和计算开销的，相比整数类型，我们应该优先考虑整数类型存储，只在必要使用实数存储的情况下考虑实数类型。在实际应用中，我们也可以通过<code>BIGINT</code>类型替换<code>DECIMAL</code>来存储，只需要将数据乘以相应的倍数即可。</p>
+</li>
+<li><p><strong>字符串类型</strong><br>字符串类型包括<code>VARCHAR(65535)</code>，<code>CHAR</code>。<br><code>VARCHAR</code>数据类型存储可变长字符串，额外使用1-2个字节来存储字符串长度，在ROW_FORMAT!=FIXED的情况下，它比<code>CHAR</code>更加节省空间。而<code>CHAR</code>数据类型则是存储定长字符串。<br>逻辑上，<code>VARCHAR</code>和<code>CHAR</code>是相同的，存储上，因为<code>CHAR</code>是定长，所以MySQL才采用空格填充的方式以方便比较。在存储和检索时，<code>VARCHAR</code>数据类型会保留字符串末尾的空格符，而<code>CHAR</code>数据类型则会删除末尾的空格符。<br>综上所述，以下情况比较适合采用<code>VARCHAR</code>数据类型：<br>1、 列数据的长度不均匀，方差偏大。<br>2、 列更新少。如果更新长度大于原有长度，则MySQL需要做很多多余工作来扩展空间存储新数据。<br>3、 数据字符集复杂。如UTF-8，每个字符采用不同的字节数。<br>以下情况适合采用<code>CHAR</code>数据类型：<br>1、 经常变更的数据。定长的<code>CHAR</code>类型不容易产生碎片。<br>2、 数据非常短的列或者长度变化不大的列。</p>
+</li>
+<li><p><strong>文本类型</strong><br>文本类型包括<code>TINYBLOB</code>、<code>SMALLBLOB</code>、<code>BLOB</code>、<code>MEDIUMBLOB</code>、<code>LONGBLOB</code>以及<code>TINYTEXT</code>、<code>SMALLTEXT</code>、<code>TEXT</code>、<code>MEDIUMTEXT</code>、<code>LONGTEXT</code>。<br>它们之间仅有的不同就是BLOB类型是二进制类型，没有排序规则和字符集，TEXT是字符类型，有排序规则和字符集。<br>对于文本类型，MySQL只针对文本的一部分进行排序和索引，排序是按照<code>max_sort_length</code>字节来排序的。</p>
+</li>
+<li><p><strong>枚举类型</strong><br><code>ENUM</code><br>对于MySQL内部将值在列表中的位置保存为整数，并且在表的.frm文件中保存一份映射关系，所以枚举实际存储的是整数，在查找的时候会转换为字符串，这个你可以验证一下，同时在排序的时候也是按照这个位置来排序的，可以同<code>field()</code>函数改变排序规则。</p>
+</li>
+<li><p><strong>日期和时间类型</strong><br>日期和时间类型包括：<code>TIMESTAMP(32 bit)</code>、<code>DATETIME(64 bit)</code>。<br>MySQL存储时间的最小精度是秒。<code>DATETIME</code>的时间范围是1001年至9999年，<code>TIMESTAMP</code>的时间范围为1970年到2038年。<code>DATETIME</code>的存储格式为整形，以文本的方式存储在数据库中，<code>TIMESTAMP</code>的存储格式则在各个版本中不同，它的存储值与时区相关，默认为<code>NOT NULL</code>，默认值为当前时区的当前时间。</p>
+</li>
 </ul>
-<h4 id="二、为什么会有TCP/IP协议？">二、为什么会有TCP/IP协议？</h4><p>　　互联网由许多个小网络组成，每个小网络都有自己的结构和规则，就相当于世界各地的“方言”，当两个不同区域的人相遇时就会交流困难，为了解决交流问题就需要一门“世界语”，而这门“世界语”就是TCP/IP协议。</p>
-<h4 id="三、TCP/IP工作原理">三、TCP/IP工作原理</h4><ul>
-<li><strong>各层协议之间的协作关系</strong><br><img src="http://int64ago.qiniudn.com/qt6prk71iqkt9.jpg" alt="图2"></li>
-<li><strong>数据包的封装与解封</strong><br><img src="http://int64ago.qiniudn.com/f76khcvezsemi.jpg" alt="图3"><br>　　当应用程序调用TCP或者UDP协议发送数据包时，用户数据被送入TCP/IP协议栈，自上而下通过每一层，直到数据转为一串比特流被送入网络。在每一层接收到数据后，都会加上一些头部信息或者尾部信息以完成数据包的封装。<br><img src="http://int64ago.qiniudn.com/dhgh5nu1y8pvi.jpg" alt="图4"><br>　　拆封过程则是自下而上一层一层的拆开每一层的首部信息，最后得到被传输的应用数据</li>
-</ul>
-<h4 id="四、三次握手">四、三次握手</h4><p>　　TCP协议是针对主机对主机的传输层协议，提供可靠的连接服务，采用三次握手确认建立一个连接。<br><img src="http://int64ago.qiniudn.com/57eylmhkc5wmi.png" alt="图5"><br>　　通过wireshark捕捉网络数据包，结果如下：<br><img src="http://int64ago.qiniudn.com/cyzubjp58kt9.jpg" alt="图6"><br>　　115.231.94.62即 class.oschina.mopaas.com的主机地址。通过数据显示能够发现，在建立HTTP连接之前先建立了TCP连接，这说明http协议是建立在tcp协议基础之上的。<br>Seq：Sequence Number 序列号。<br>Ack：Acknowledgement Number 确定号。<br>1、（第一次握手）在No.8961中，本地主机发送[SYN]数据报，序列号Seq=0，代表本地主机，即客户端通过端口51344请求远程主机端口80建立连接。<br>2、（第二次握手）在No.8962中，远程主机发送[SYN+ACK]报文，序列号Seq=0，确定号Ack=1(Seq+1)，回复本地主机。<br>3、（第三次握手）在No.8963中，本地主机接到远程主机的回复后，发送ACK报文，序列号Seq=1，确定号Ack=1，回复远程主机。<br>4、TCP连接成功，建立HTTP连接。</p>
+<p>MySQL的数据类型有很多，一些不常用的类型就不做介绍了，每一种类型都有它自己的特性，在一定的场景中都能表现出超越其他类型的优势，所以，我们需要认真思考需求和实际所需，参考前面所提的数据类型选择原则，根据项目中数据的变化来决定采用哪种数据类型存储。</p>
 
       
     </div>
@@ -204,9 +216,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/TCP/"> #TCP </a>
+            <a href="/tags/MySQL/"> #MySQL </a>
           
-            <a href="/tags/协议/"> #协议 </a>
+            <a href="/tags/数据库/"> #数据库 </a>
+          
+            <a href="/tags/数据类型/"> #数据类型 </a>
           
         </div>
       
@@ -215,13 +229,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/07/10/PHP-CURL携带证书请求HTTPS/">PHP-CURL携带证书请求HTTPS</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/07/01/hello-world/">Hello World</a>
+              <a href="/2015/07/26/MySQL数据类型选择/">MySQL数据类型选择</a>
             
           </div>
         </div>
@@ -337,7 +349,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、TCP/IP是什么？"><span class="nav-number">1.</span> <span class="nav-text">一、TCP/IP是什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、为什么会有TCP/IP协议？"><span class="nav-number">2.</span> <span class="nav-text">二、为什么会有TCP/IP协议？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、TCP/IP工作原理"><span class="nav-number">3.</span> <span class="nav-text">三、TCP/IP工作原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、三次握手"><span class="nav-number">4.</span> <span class="nav-text">四、三次握手</span></a></li></ol></div>
+              <p class="post-toc-empty">此文章未包含目录</p>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

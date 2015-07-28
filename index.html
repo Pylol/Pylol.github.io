@@ -150,6 +150,99 @@
           
           
             
+              <a class="post-title-link" href="/2015/07/28/MySQL数据类型/">
+                MySQL数据类型
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-07-28
+        </span>
+
+        
+          <span class="post-category">
+            &nbsp; | &nbsp; 分类于
+            
+              <a href="/categories/MySQL/">MySQL</a>
+
+              
+              
+                ， 
+              
+
+            
+              <a href="/categories/MySQL/数据库/">数据库</a>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>前面已经讲到过 <a href="http://pylol.github.io/2015/07/26/MySQL%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E9%80%89%E6%8B%A9/">MySQL数据类型选择</a> 的原则，前提是我们需要了解MySQL数据库的数据类型，以及他们之间的区别和效率，那么这篇文章就来说明MySQL数据类型。</p>
+<ul>
+<li><p><strong>整数类型</strong><br>整数类型包括<code>TINYINT(8 bit)</code>、<code>SMALLINT(16 bit)</code>、<code>MEDIUMINT(24 bit)</code>、<code>INT(32 bit)</code>、<code>BIGINT(64 bit)</code>。<br>整数类型的存储范围为(-2)^(N-1) ~ 2^(N-1)，N表示存储的位数。同时整数类型有<code>UNSIGNED</code>属性，表示不允许负数，这使得存储范围的上限提高一倍。<br>在存储上整数类型都是定长的，我们平时建表时定义的<code>INT(11)</code>表示数字显示长度而非存储长度，对于计算和存储来说<code>INT(1)</code>和<code>INT(11)</code>是一回事。</p>
+</li>
+<li><p><strong>实数类型</strong><br>实数类型包括<code>FLOAT(32 bit)</code>、<code>DOUBLE(64 bit)</code>、<code>DECIMAL</code>。<br>这些都是存储精确的小数数据。<code>DECIMAL</code>最多允许存储65个数字，它只是一种存储格式，由MySQL的服务器自身实现其高精度计算，在计算中<code>DECIMAL</code>会转换成<code>DOUBLE</code>类型计算。<br>实数运算是需要额外的空间和计算开销的，相比整数类型，我们应该优先考虑整数类型存储，只在必要使用实数存储的情况下考虑实数类型。在实际应用中，我们也可以通过<code>BIGINT</code>类型替换<code>DECIMAL</code>来存储，只需要将数据乘以相应的倍数即可。</p>
+</li>
+<li><p><strong>字符串类型</strong><br>字符串类型包括<code>VARCHAR(65535)</code>，<code>CHAR</code>。<br><code>VARCHAR</code>数据类型存储可变长字符串，额外使用1-2个字节来存储字符串长度，在ROW_FORMAT!=FIXED的情况下，它比<code>CHAR</code>更加节省空间。而<code>CHAR</code>数据类型则是存储定长字符串。<br>逻辑上，<code>VARCHAR</code>和<code>CHAR</code>是相同的，存储上，因为<code>CHAR</code>是定长，所以MySQL才采用空格填充的方式以方便比较。在存储和检索时，<code>VARCHAR</code>数据类型会保留字符串末尾的空格符，而<code>CHAR</code>数据类型则会删除末尾的空格符。<br>综上所述，以下情况比较适合采用<code>VARCHAR</code>数据类型：<br>1、 列数据的长度不均匀，方差偏大。<br>2、 列更新少。如果更新长度大于原有长度，则MySQL需要做很多多余工作来扩展空间存储新数据。<br>3、 数据字符集复杂。如UTF-8，每个字符采用不同的字节数。<br>以下情况适合采用<code>CHAR</code>数据类型：<br>1、 经常变更的数据。定长的<code>CHAR</code>类型不容易产生碎片。<br>2、 数据非常短的列或者长度变化不大的列。</p>
+</li>
+<li><p><strong>文本类型</strong><br>文本类型包括<code>TINYBLOB</code>、<code>SMALLBLOB</code>、<code>BLOB</code>、<code>MEDIUMBLOB</code>、<code>LONGBLOB</code>以及<code>TINYTEXT</code>、<code>SMALLTEXT</code>、<code>TEXT</code>、<code>MEDIUMTEXT</code>、<code>LONGTEXT</code>。<br>它们之间仅有的不同就是BLOB类型是二进制类型，没有排序规则和字符集，TEXT是字符类型，有排序规则和字符集。<br>对于文本类型，MySQL只针对文本的一部分进行排序和索引，排序是按照<code>max_sort_length</code>字节来排序的。</p>
+</li>
+<li><p><strong>枚举类型</strong><br><code>ENUM</code><br>对于MySQL内部将值在列表中的位置保存为整数，并且在表的.frm文件中保存一份映射关系，所以枚举实际存储的是整数，在查找的时候会转换为字符串，这个你可以验证一下，同时在排序的时候也是按照这个位置来排序的，可以同<code>field()</code>函数改变排序规则。</p>
+</li>
+<li><p><strong>日期和时间类型</strong><br>日期和时间类型包括：<code>TIMESTAMP(32 bit)</code>、<code>DATETIME(64 bit)</code>。<br>MySQL存储时间的最小精度是秒。<code>DATETIME</code>的时间范围是1001年至9999年，<code>TIMESTAMP</code>的时间范围为1970年到2038年。<code>DATETIME</code>的存储格式为整形，以文本的方式存储在数据库中，<code>TIMESTAMP</code>的存储格式则在各个版本中不同，它的存储值与时区相关，默认为<code>NOT NULL</code>，默认值为当前时区的当前时间。</p>
+</li>
+</ul>
+<p>MySQL的数据类型有很多，一些不常用的类型就不做介绍了，每一种类型都有它自己的特性，在一定的场景中都能表现出超越其他类型的优势，所以，我们需要认真思考需求和实际所需，参考前面所提的数据类型选择原则，根据项目中数据的变化来决定采用哪种数据类型存储。</p>
+
+        
+      
+    </div>
+
+    <div class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </div>
+  </div>
+
+
+    
+      
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
               <a class="post-title-link" href="/2015/07/26/MySQL数据类型选择/">
                 MySQL数据类型选择
               </a>
@@ -226,97 +319,11 @@
 
 
     
-      
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/07/15/乐观锁与悲观锁/">
-                乐观锁与悲观锁
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于 2015-07-15
-        </span>
-
-        
-          <span class="post-category">
-            &nbsp; | &nbsp; 分类于
-            
-              <a href="/categories/数据库/">数据库</a>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </div>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h4 id="并发引发的问题">并发引发的问题</h4><p>　　在并发访问资源的时候，会附带出许多的问题，比如：</p>
-<ul>
-<li><strong>脏读：</strong>一个事务读取的是另一个事务完成一半没有提交的数据。用户A、B看到的值都是1，用户B将值改为了2，但A读取的值仍然是1。脏读也可以理解为跟不可重复读类似，A事务第一次读取数据为1，B事务将数据改为2，A事务第二次读取数据为2，B事务回滚，这时数据依旧是1，但是事务A读取的结果是2。</li>
-<li><strong>数据丢失：</strong>一个事务对数据的修改被另一个事务的修改覆盖。用户A将数据由1变成了2，用户B将数据由2变成了1，这是A的更新就丢失了。</li>
-<li><strong>不可重复读：</strong>一个事务对一个数据进行多次读取的过程中另外一个事务对该数据进行了访问和修改，那么就导致了第一个事务对该数据前后读取的结果不同。</li>
-<li><strong>幻读：</strong>指当事务不是独立执行发生的一种现象，例如第一个事务对一个表中的数据进行修改，这种修改涉及到表的全部数据行，同时第二个事务也修改了这个表中的数据，这种修改是向表中插入一行新数据。那么，这是第一个事务执行完后就会发现还有没有修改的数据行，显得很诡异。举个栗子：一个编辑人员更改作者提交的文档，但当生产部门将其更改内容合并到该文档的主复本时，发现作者已将未编辑的新材料添加到该文档中。如果在编辑人员和生产部门完成对原始文档的处理之前，任何人都不能将新材料添加到文档中，则可以避免该问题。</li>
-</ul>
-<p>　　以上的问题都会在并发访问资源的时候出现，对于这些问题，我们需要引入并发控制，而这种并发控制常用的方法就是加锁。下面介绍控制并发冲突的两种锁机制，乐观锁和悲观锁。<br><a href="https://zh.wikipedia.org/wiki/%E4%BA%8B%E5%8B%99%E9%9A%94%E9%9B%A2" target="_blank" rel="external">事务隔离—维基百科</a></p>
-<h4 id="乐观锁">乐观锁</h4><blockquote>
-<p>乐观锁假设多用户并发的事务在处理的时候是不会互相影响的，各事务能够在不产生锁的情况处理好各自影响的那部分数据。在提交更改之前，每个事务都会检查在该事务读取数据之后有没有其他事务修改了该数据。如果其他事务有更新的话，正在提交的事务会进行回滚。</p>
-</blockquote>
-<p>　　乐观并发控制机制多数应用于数据<strong><code>争用不大</code></strong>，<strong><code>冲突较少</code></strong>的环境中，在这种环境中，偶尔回滚事务的成本会低于读取数据时锁定数据的成本，因此可以获得比其他并发控制方法更高的吞吐量。<br>　　乐观锁的应用有两种方法，一种是版本号自增，另一种是时间戳的方式。</p>
-<h4 id="悲观锁">悲观锁</h4><blockquote>
-<p>悲观锁假设多用户并发的事务在处理的时候是会互相影响的，那么悲观锁可以阻止一个事务以影响其他用户的方式来修改数据。如果一个事务执行的操作对某行数据加了锁，那么只有在这个事务释放锁后其他事务才能够执行与该锁冲突的操作。</p>
-</blockquote>
-<p>　　悲观锁并发控制机制主要用于<strong><code>数据争用激烈</code></strong>的环境，以及发生并发冲突时，使用锁保护数据的成本要低于回滚事务的成本循环中。<br>　　<strong>缺点：</strong>悲观锁采用的是数据库自身的锁机制，所以在效率方面因为加锁让数据库产生了额外的开销导致效率下降，还有可能增加死锁的机会。</p>
-<h4 id="高并发实例">高并发实例</h4><p>Q1：订票系统，某车次只有一张火车票，假定有1w个人同时打开12306网站来订票，如何解决并发问题？<br>Q2: 假设系统中图片存储在TFS（Taobao File System)中，接口提供缩略图服务，首先在缓存中查找是否有缩略图，如果没有，则从TFS加载原图片，然后请求缩略图服务，缩略图计算完成后，设置回缓存服务中。遇到的问题：当一张图片分享给100w个人以后，同一时间有1w个并发请求，由于缩略图计算耗时较长（假设1s), 在这1s内，每个请求查询缓存都没有找到然后申请计算缩略图，导致重复的缩略图计算量和资源消耗。<br>Q3: 单点峰值流量，在并发系统中，除了请求整体的并发量高，还常见单一热点资源的并发请求量很高。例如，1万个人每人分享了一张图片，其中9999张图片的缩略图请求在10 QPS以内，剩下的一张图片为新闻热点图片，峰值请求在10万QPS左右， 系统会遇到的容量问题包括：1）接口前端机容量不够；2）缓存资源单实例遇到瓶颈。<br><a href="http://weibo.com/p/1001603862417250608209?page=4#feedtop" target="_blank" rel="external">高并发系统中的常见问题</a></p>
-
-        
-      
-    </div>
-
-    <div class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </div>
-  </div>
-
-
-    
   </div>
 
   
   <div class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/p/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/p/5/">5</a><a class="extend next" rel="next" href="/p/2/">&raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/p/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/p/6/">6</a><a class="extend next" rel="next" href="/p/2/">&raquo;</a>
   </div>
 
 
@@ -350,7 +357,7 @@
         <div class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-count">11</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

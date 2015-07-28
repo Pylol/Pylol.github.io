@@ -221,8 +221,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/07/01/hello-world/">
-                Hello World
+              <a class="post-title-link" href="/2015/07/10/TCP-IP协议基础/">
+                TCP/IP协议基础
               </a>
             
           
@@ -231,9 +231,20 @@
 
       <div class="post-meta">
         <span class="post-time">
-          发表于 2015-07-01
+          发表于 2015-07-10
         </span>
 
+        
+          <span class="post-category">
+            &nbsp; | &nbsp; 分类于
+            
+              <a href="/categories/协议/">协议</a>
+
+              
+              
+
+            
+          </span>
         
 
         
@@ -249,15 +260,18 @@
 
       
         
-          <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+          <h4 id="一、TCP/IP是什么？">一、TCP/IP是什么？</h4><p>　　全称：传输控制协议（Transmission Control Protocol）/互联网协议（Internet Protocol）<br>　　它可以指代一个TCP/IP参考模型，也可以指代一个协议，也可以指代一个协议族。</p>
+<ul>
+<li><strong>TCP/IP参考模型</strong><br><img src="http://int64ago.qiniudn.com/or7sbdquxr.png" alt="图1"><br>每一层均有许多不同的协议组成，各层实现各自的功能时，可以使用直接下层提供的服务，同时也要给直接上层提供服务。</li>
+<li><strong>TCP/IP协议族</strong><br>指整个网络传输协议的集合</li>
+<li><strong> TCP/IP协议 </strong><br>TCP协议位于第四层传输层；IP协议，又称网际协议或互联网协议，位于第三层</li>
+</ul>
+<h4 id="二、为什么会有TCP/IP协议？">二、为什么会有TCP/IP协议？</h4><p>　　互联网由许多个小网络组成，每个小网络都有自己的结构和规则，就相当于世界各地的“方言”，当两个不同区域的人相遇时就会交流困难，为了解决交流问题就需要一门“世界语”，而这门“世界语”就是TCP/IP协议。</p>
+<h4 id="三、TCP/IP工作原理">三、TCP/IP工作原理</h4><ul>
+<li><strong>各层协议之间的协作关系</strong><br><img src="http://int64ago.qiniudn.com/qt6prk71iqkt9.jpg" alt="图2"></li>
+<li><strong>数据包的封装与解封</strong><br><img src="http://int64ago.qiniudn.com/f76khcvezsemi.jpg" alt="图3"><br>　　当应用程序调用TCP或者UDP协议发送数据包时，用户数据被送入TCP/IP协议栈，自上而下通过每一层，直到数据转为一串比特流被送入网络。在每一层接收到数据后，都会加上一些头部信息或者尾部信息以完成数据包的封装。<br><img src="http://int64ago.qiniudn.com/dhgh5nu1y8pvi.jpg" alt="图4"><br>　　拆封过程则是自下而上一层一层的拆开每一层的首部信息，最后得到被传输的应用数据</li>
+</ul>
+<h4 id="四、三次握手">四、三次握手</h4><p>　　TCP协议是针对主机对主机的传输层协议，提供可靠的连接服务，采用三次握手确认建立一个连接。<br><img src="http://int64ago.qiniudn.com/57eylmhkc5wmi.png" alt="图5"><br>　　通过wireshark捕捉网络数据包，结果如下：<br><img src="http://int64ago.qiniudn.com/cyzubjp58kt9.jpg" alt="图6"><br>　　115.231.94.62即 class.oschina.mopaas.com的主机地址。通过数据显示能够发现，在建立HTTP连接之前先建立了TCP连接，这说明http协议是建立在tcp协议基础之上的。<br>Seq：Sequence Number 序列号。<br>Ack：Acknowledgement Number 确定号。<br>1、（第一次握手）在No.8961中，本地主机发送[SYN]数据报，序列号Seq=0，代表本地主机，即客户端通过端口51344请求远程主机端口80建立连接。<br>2、（第二次握手）在No.8962中，远程主机发送[SYN+ACK]报文，序列号Seq=0，确定号Ack=1(Seq+1)，回复本地主机。<br>3、（第三次握手）在No.8963中，本地主机接到远程主机的回复后，发送ACK报文，序列号Seq=1，确定号Ack=1，回复远程主机。<br>4、TCP连接成功，建立HTTP连接。</p>
 
         
       
@@ -281,7 +295,7 @@
 
   
   <div class="pagination">
-    <a class="extend prev" rel="prev" href="/p/4/">&laquo;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/p/4/">4</a><span class="page-number current">5</span>
+    <a class="extend prev" rel="prev" href="/p/4/">&laquo;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/p/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/p/6/">6</a><a class="extend next" rel="next" href="/p/6/">&raquo;</a>
   </div>
 
 
@@ -315,7 +329,7 @@
         <div class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-count">11</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
