@@ -150,6 +150,101 @@
           
           
             
+              <a class="post-title-link" href="/2015/07/10/PHP多线程/">
+                PHP多线程
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-07-10
+        </span>
+
+        
+          <span class="post-category">
+            &nbsp; | &nbsp; 分类于
+            
+              <a href="/categories/php/">php</a>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h3 id="PHP多线程">PHP多线程</h3><p>　　PHP本身并不支持多线程，但是PHP可以通过扩展引用来实现多线。当然，有许多高手大能们通过各种方式去模拟多线程工作的方式来实现，比如：fsockopen，curl_multi，popen，pcntl_fork，proc_open等方式。这些我都不知道是什么，只有回头再去研究研究。<br>　　<br>　　这篇笔记只记录两种方式来实现PHP的多线程，一种通过并发模拟，一种通过扩展，即curl_multi，pthreads。</p>
+<p>　　在记录curl_multi之前，先说一下curl请求的用法，如下代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> model_http_curl_get(<span class="variable">$url</span>,<span class="variable">$userAgent</span>=<span class="string">""</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$userAgent</span> = <span class="string">'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.2)'</span>;</span><br><span class="line">    <span class="variable">$curl</span> = curl_init();</span><br><span class="line">    curl_<span class="built_in">setopt</span>(<span class="variable">$curl</span>, CURLOPT_URL, <span class="variable">$url</span>);</span><br><span class="line">    curl_<span class="built_in">setopt</span>(<span class="variable">$curl</span>, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);</span><br><span class="line">    curl_<span class="built_in">setopt</span>(<span class="variable">$curl</span>, CURLOPT_TIMEOUT, <span class="number">30</span>);</span><br><span class="line">    curl_<span class="built_in">setopt</span>(<span class="variable">$curl</span>, CURLOPT_USERAGENT, <span class="variable">$userAgent</span>);</span><br><span class="line">    <span class="variable">$result</span> = curl_<span class="built_in">exec</span>(<span class="variable">$curl</span>);</span><br><span class="line">    curl_close(<span class="variable">$curl</span>);</span><br><span class="line">    <span class="built_in">return</span> <span class="variable">$result</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>　　上面这个函数就是一个curl的http请求的函数。首先通过curl_init()生成一个curl句柄，这个句柄记录和完成http请求。随后通过curl_setopt设置请求参数：<br>　　CURLOPT_URL：表示请求的链接地址。<br>　　CURLOPT_RETURNTRANSFER：表示是否需要返回。<br>　　CURLOPT_TIMEOUT：表示请求执行的最长时间。<br>　　CURLOPT_USERAGENT：表示请求的客户端。<br>　　最后执行请求回去返回结果，完成请求。</p>
+<h4 id="一、curl_multi模拟并发请求">一、curl_multi模拟并发请求</h4><p> 　　<br>　　手册上curl_multi函数系列介绍的非常少，之前没接触过这块的，一些地方还是比较难理解。所以先记录解释一下一些函数的含义：</p>
+<ul>
+<li><p><strong>curl_multi_init( void )</strong><br>　　初始化一个curl_multi句柄，然后将多个curl句柄传递给此句柄。</p>
+</li>
+<li><p><strong>curl_multi_add_handle(resouce $mh, resource $ch)</strong><br>　　向curl_multi()句柄传递curl句柄。第一个参数为curl_multi句柄，第二个参数为curl句柄。</p>
+</li>
+<li><p><strong>curl_multi_exec(resource $mh, int $flag)</strong><br>　　发起curl_multi请求。第一个参数为curl_multi句柄，第二个用来记录未完成请求数。返回值为定义于cURL<a href="http://php.net/manual/zh/curl.constants.php" target="_blank" rel="external">预定义常量</a>中的cURL代码</p>
+</li>
+<li><p><strong>curl_multi_info_read(resouce $mh [,int $msg_in_queue=NULL])</strong><br>　　获取当前解析的cURL信息。第一个参数为curl_multi句柄， 第二个参数为仍在消息队列中的请求数。成功时返回相关信息的数组，失败返回FALSE。</p>
+</li>
+<li><p><strong>curl_multi_getcontent($ch)</strong><br>　　如果设置了CURLOPT_RETURNTRANSFER,则返回获取的输出文本流。第一个参数为curl句柄。</p>
+</li>
+<li><p><strong>curl_multi_remove_handle($mh, $ch)</strong><br>　　从curl_multi句柄中移除curl句柄，若移除的curl句柄正在执行，则会停止处理过程中所有的传输任务。</p>
+</li>
+<li><p><strong>curl_multi_close($mh)</strong><br>　　关闭一组cURL句柄。</p>
+</li>
+</ul>
+<p><strong>执行步骤：</strong><br>1.通过 curl_multi_init()初始化curl_multi句柄。<br>2.通过curl_init()获得curl句柄，并通过curl_multi_add_handle()添加至curl_multi句柄中<br>3.持续调用curl_multi_exec()<br>4.通过curl_multi_getcontent()获取运行结果<br>5.调用curl_multi_remove_handle()移除curl句柄并通过curl_close()注销句柄<br>6.调用curl_multi_close();</p>
+<p><strong>代码如下：</strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 返回一个curl句柄资源</span><br><span class="line"> * <span class="doctag">@param</span> $url</span><br><span class="line"> * <span class="doctag">@param</span> string $userAgent</span><br><span class="line"> * <span class="doctag">@return</span> resource</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">model_http_curl_get_no_result</span><span class="params">(<span class="variable">$url</span>,<span class="variable">$userAgent</span>=<span class="string">""</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="variable">$userAgent</span> = <span class="string">'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.2)'</span>;</span><br><span class="line">    <span class="variable">$curl</span> = curl_init();</span><br><span class="line">    curl_setopt(<span class="variable">$curl</span>, CURLOPT_URL, <span class="variable">$url</span>);</span><br><span class="line">    curl_setopt(<span class="variable">$curl</span>, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);</span><br><span class="line">    curl_setopt(<span class="variable">$curl</span>, CURLOPT_TIMEOUT, <span class="number">30</span>);</span><br><span class="line">    curl_setopt(<span class="variable">$curl</span>, CURLOPT_USERAGENT, <span class="variable">$userAgent</span>);</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$curl</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> (<span class="variable">$i</span>=<span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="number">20</span>; <span class="variable">$i</span>++)&#123;</span><br><span class="line">    <span class="variable">$urls_array</span>[] =  <span class="string">"http://www.baidu.com/s?wd=baidu"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$t</span> = microtime(<span class="keyword">true</span>);</span><br><span class="line"><span class="variable">$cm</span> = curl_multi_init();</span><br><span class="line"><span class="variable">$conn</span> = <span class="keyword">array</span>();</span><br><span class="line"><span class="keyword">foreach</span>(<span class="variable">$urls_array</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$url</span>)&#123;</span><br><span class="line">    <span class="variable">$ch</span> = model_http_curl_get_no_result(<span class="variable">$url</span>);</span><br><span class="line">    <span class="comment">//向curl_multi批处理对象添加单独的curl句柄</span></span><br><span class="line">    curl_multi_add_handle(<span class="variable">$cm</span>, <span class="variable">$ch</span>);</span><br><span class="line">    <span class="variable">$conn</span>[<span class="variable">$key</span>] = <span class="variable">$ch</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'exec start:'</span>.time().<span class="string">"\n"</span>;</span><br><span class="line"><span class="variable">$i</span> = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">do</span>&#123;</span><br><span class="line">    <span class="comment">//执行curl请求，如果exec没有执行完，继续执行</span></span><br><span class="line">    <span class="keyword">if</span>( (<span class="variable">$status</span> = curl_multi_exec(<span class="variable">$cm</span>, <span class="variable">$active</span>)) != CURLM_CALL_MULTI_PERFORM)&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="variable">$status</span> != CURLM_OK)&#123;<span class="keyword">break</span>;&#125;</span><br><span class="line">        <span class="comment">//获取curl相关传输信息</span></span><br><span class="line">        <span class="keyword">while</span>(<span class="variable">$done</span> = curl_multi_info_read(<span class="variable">$cm</span>))&#123;</span><br><span class="line">            <span class="comment">//获取curl句柄信息</span></span><br><span class="line">            <span class="comment">/* $info = curl_getinfo($done["handle"]);</span><br><span class="line">            //获取错误信息</span><br><span class="line">             $error = curl_error($done["handle"]);*/</span></span><br><span class="line">            <span class="comment">//获取当前单独curl请求回的内容</span></span><br><span class="line">            <span class="variable">$result</span> = curl_multi_getcontent(<span class="variable">$done</span>[<span class="string">"handle"</span>]);</span><br><span class="line">            <span class="comment">//从curl_multi批处理对象中移除curl句柄</span></span><br><span class="line">            curl_multi_remove_handle(<span class="variable">$cm</span>, <span class="variable">$done</span>[<span class="string">'handle'</span>]);</span><br><span class="line">            curl_close(<span class="variable">$done</span>[<span class="string">'handle'</span>]);</span><br><span class="line"> </span><br><span class="line">            <span class="keyword">if</span>(<span class="variable">$active</span> &gt; <span class="number">0</span>)&#123;</span><br><span class="line">                <span class="comment">//curl_multi_select($cm, 0.5); //此处会导致阻塞大概0.5秒。</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="variable">$logFile</span> = <span class="string">'multi_log/curl_multi'</span>.<span class="variable">$i</span>.<span class="string">'.html'</span>;</span><br><span class="line">            file_put_contents(<span class="variable">$logFile</span>, <span class="variable">$result</span>, FILE_APPEND);</span><br><span class="line">            <span class="variable">$i</span> ++;</span><br><span class="line">            <span class="keyword">echo</span> <span class="variable">$i</span>.<span class="string">"info_read"</span>.time().<span class="string">"\n"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;<span class="keyword">while</span>(<span class="variable">$active</span> &gt; <span class="number">0</span>);</span><br><span class="line">curl_multi_close(<span class="variable">$cm</span>);</span><br><span class="line"><span class="variable">$e</span> = microtime(<span class="keyword">true</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"curl_multi:"</span>.(<span class="variable">$e</span>-<span class="variable">$t</span>).<span class="string">"\n"</span>;</span><br><span class="line"> </span><br><span class="line"><span class="preprocessor">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
+<h4 id="pthreads的php扩展">pthreads的php扩展</h4><p>　　POSIX线程，简称pthreads，是线程的POSIX标准，该标准定义了创建和操纵线程的一整套API。<br>　　通过使用pthreads扩展，这个才是真正意义上多线程，程序运行时会再php进程下创建多个线程并发执行代码片段，从而达到性能的高效。步骤同普通curl请求，就不多记录。</p>
+<p><strong>phreads扩展的安装</strong><br>　　1.下载<a href="http://windows.php.net/downloads/pecl/releases/pthreads/" target="_blank" rel="external">pthreads扩展包</a><br>　　2.将php_pthreads.dll文件复制到/path/to/php/ext/目录下。<br>　　3.将pthreadVC2.dll文件复制到/path/to/php/目录下。(有些安装教程里面说要把这个文件也复制到C://windows/system32目录下，但是我没有复制也能正常运行，如果不行的话，复制过去吧)。<br>　　4.在php.ini配置文件中加入extension=php_pthreads.dll扩展信息。<br>　　5.将pthreadVC2.dll的路径加入到系统的环境变量PATH中。</p>
+<p><strong>示例代码：</strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">test_thread_run</span> <span class="keyword">extends</span> <span class="title">Thread</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$url</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$data</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$num</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(<span class="variable">$url</span>, <span class="variable">$num</span>)</span></span>&#123;</span><br><span class="line">        <span class="variable">$this</span>-&gt;url = <span class="variable">$url</span>;</span><br><span class="line">        <span class="variable">$this</span>-&gt;num = <span class="variable">$num</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>((<span class="variable">$url</span> = <span class="variable">$this</span>-&gt;url))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="variable">$this</span>-&gt;data = model_http_curl_get(<span class="variable">$url</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">model_thread_result_get</span><span class="params">(<span class="variable">$urls_array</span>)</span></span>&#123;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$urls_array</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$url</span>)&#123;</span><br><span class="line">        <span class="variable">$thread_array</span>[<span class="variable">$key</span>] = <span class="keyword">new</span> test_thread_run(<span class="variable">$url</span>, <span class="variable">$key</span>);</span><br><span class="line">        <span class="variable">$thread_array</span>[<span class="variable">$key</span>]-&gt;start();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$thread_array</span> <span class="keyword">as</span> <span class="variable">$thread_array_key</span> =&gt; <span class="variable">$thread_array_value</span>)&#123;</span><br><span class="line">        <span class="keyword">while</span>(<span class="variable">$thread_array</span>[<span class="variable">$thread_array_key</span>]-&gt;isRunning());</span><br><span class="line">        <span class="keyword">if</span>(<span class="variable">$thread_array</span>[<span class="variable">$thread_array_key</span>]-&gt;join())&#123;</span><br><span class="line">            <span class="variable">$variable_data</span>[<span class="variable">$thread_array_key</span>] = <span class="variable">$thread_array</span>[<span class="variable">$thread_array_key</span>]-&gt;data;</span><br><span class="line"> </span><br><span class="line">            <span class="keyword">if</span>(<span class="variable">$thread_array</span>[<span class="variable">$thread_array_key</span>]-&gt;data != <span class="string">''</span>)&#123;</span><br><span class="line">                <span class="variable">$logFile</span> = <span class="string">'log/'</span>.<span class="variable">$thread_array_key</span>.<span class="string">'.html'</span>;</span><br><span class="line">                file_put_contents(<span class="variable">$logFile</span>,  <span class="variable">$thread_array</span>[<span class="variable">$thread_array_key</span>]-&gt;data, FILE_APPEND);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$variable_data</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">model_http_curl_get</span><span class="params">(<span class="variable">$url</span>,<span class="variable">$userAgent</span>=<span class="string">""</span>)</span></span>&#123;</span><br><span class="line">    <span class="variable">$userAgent</span> = <span class="string">'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.2)'</span>;</span><br><span class="line">    <span class="variable">$curl</span> = curl_init();</span><br><span class="line">    curl_setopt(<span class="variable">$curl</span>, CURLOPT_URL, <span class="variable">$url</span>);</span><br><span class="line">    curl_setopt(<span class="variable">$curl</span>, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);</span><br><span class="line">    curl_setopt(<span class="variable">$curl</span>, CURLOPT_TIMEOUT, <span class="number">30</span>);</span><br><span class="line">    curl_setopt(<span class="variable">$curl</span>, CURLOPT_USERAGENT, <span class="variable">$userAgent</span>);</span><br><span class="line">    <span class="variable">$result</span> = curl_exec(<span class="variable">$curl</span>);</span><br><span class="line">    curl_close(<span class="variable">$curl</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$result</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> (<span class="variable">$i</span>=<span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="number">20</span>; <span class="variable">$i</span>++)&#123;</span><br><span class="line">    <span class="variable">$urls_array</span>[] =  <span class="string">"http://www.baidu.com/s?wd=baidu"</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="variable">$t</span> = microtime(<span class="keyword">true</span>);</span><br><span class="line"><span class="variable">$result</span> = model_thread_result_get(<span class="variable">$urls_array</span>);</span><br><span class="line"><span class="variable">$e</span> = microtime(<span class="keyword">true</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"多线程："</span>.(<span class="variable">$e</span>-<span class="variable">$t</span>).<span class="string">"\n"</span>;</span><br><span class="line"><span class="preprocessor">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
+<p>　　这个程序在不同的机器上测试可能不尽相同，同样有可能多线程的运行时间会比其他方法还长，这个需要机器的配置支持，同还要对线程数进行有效的控制。</p>
+
+        
+      
+    </div>
+
+    <div class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </div>
+  </div>
+
+
+    
+      
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
               <a class="post-title-link" href="/2015/07/10/PHP-CURL携带证书请求HTTPS/">
                 PHP-CURL携带证书请求HTTPS
               </a>
@@ -210,87 +305,6 @@
 
 
     
-      
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/07/10/TCP-IP协议基础/">
-                TCP/IP协议基础
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于 2015-07-10
-        </span>
-
-        
-          <span class="post-category">
-            &nbsp; | &nbsp; 分类于
-            
-              <a href="/categories/协议/">协议</a>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </div>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h4 id="一、TCP/IP是什么？">一、TCP/IP是什么？</h4><p>　　全称：传输控制协议（Transmission Control Protocol）/互联网协议（Internet Protocol）<br>　　它可以指代一个TCP/IP参考模型，也可以指代一个协议，也可以指代一个协议族。</p>
-<ul>
-<li><strong>TCP/IP参考模型</strong><br><img src="http://int64ago.qiniudn.com/or7sbdquxr.png" alt="图1"><br>每一层均有许多不同的协议组成，各层实现各自的功能时，可以使用直接下层提供的服务，同时也要给直接上层提供服务。</li>
-<li><strong>TCP/IP协议族</strong><br>指整个网络传输协议的集合</li>
-<li><strong> TCP/IP协议 </strong><br>TCP协议位于第四层传输层；IP协议，又称网际协议或互联网协议，位于第三层</li>
-</ul>
-<h4 id="二、为什么会有TCP/IP协议？">二、为什么会有TCP/IP协议？</h4><p>　　互联网由许多个小网络组成，每个小网络都有自己的结构和规则，就相当于世界各地的“方言”，当两个不同区域的人相遇时就会交流困难，为了解决交流问题就需要一门“世界语”，而这门“世界语”就是TCP/IP协议。</p>
-<h4 id="三、TCP/IP工作原理">三、TCP/IP工作原理</h4><ul>
-<li><strong>各层协议之间的协作关系</strong><br><img src="http://int64ago.qiniudn.com/qt6prk71iqkt9.jpg" alt="图2"></li>
-<li><strong>数据包的封装与解封</strong><br><img src="http://int64ago.qiniudn.com/f76khcvezsemi.jpg" alt="图3"><br>　　当应用程序调用TCP或者UDP协议发送数据包时，用户数据被送入TCP/IP协议栈，自上而下通过每一层，直到数据转为一串比特流被送入网络。在每一层接收到数据后，都会加上一些头部信息或者尾部信息以完成数据包的封装。<br><img src="http://int64ago.qiniudn.com/dhgh5nu1y8pvi.jpg" alt="图4"><br>　　拆封过程则是自下而上一层一层的拆开每一层的首部信息，最后得到被传输的应用数据</li>
-</ul>
-<h4 id="四、三次握手">四、三次握手</h4><p>　　TCP协议是针对主机对主机的传输层协议，提供可靠的连接服务，采用三次握手确认建立一个连接。<br><img src="http://int64ago.qiniudn.com/57eylmhkc5wmi.png" alt="图5"><br>　　通过wireshark捕捉网络数据包，结果如下：<br><img src="http://int64ago.qiniudn.com/cyzubjp58kt9.jpg" alt="图6"><br>　　115.231.94.62即 class.oschina.mopaas.com的主机地址。通过数据显示能够发现，在建立HTTP连接之前先建立了TCP连接，这说明http协议是建立在tcp协议基础之上的。<br>Seq：Sequence Number 序列号。<br>Ack：Acknowledgement Number 确定号。<br>1、（第一次握手）在No.8961中，本地主机发送[SYN]数据报，序列号Seq=0，代表本地主机，即客户端通过端口51344请求远程主机端口80建立连接。<br>2、（第二次握手）在No.8962中，远程主机发送[SYN+ACK]报文，序列号Seq=0，确定号Ack=1(Seq+1)，回复本地主机。<br>3、（第三次握手）在No.8963中，本地主机接到远程主机的回复后，发送ACK报文，序列号Seq=1，确定号Ack=1，回复远程主机。<br>4、TCP连接成功，建立HTTP连接。</p>
-
-        
-      
-    </div>
-
-    <div class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </div>
-  </div>
-
-
-    
   </div>
 
   
@@ -329,14 +343,14 @@
         <div class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-count">12</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>

@@ -150,6 +150,92 @@
           
           
             
+              <a class="post-title-link" href="/2015/08/03/What-s-the-difference-between-an-exclusive-lock-and-a-shared-lock/">
+                What's the difference between an exclusive lock and a shared lock?
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-08-03
+        </span>
+
+        
+          <span class="post-category">
+            &nbsp; | &nbsp; 分类于
+            
+              <a href="/categories/mysql/">mysql</a>
+
+              
+              
+                ， 
+              
+
+            
+              <a href="/categories/mysql/数据库/">数据库</a>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>对于共享（读）锁和排他（写）锁，在<a href="http://stackoverflow.com/questions/11837428/whats-the-difference-between-an-exclusive-lock-and-a-shared-lock" target="_blank" rel="external">stackoverflow</a>上看到一个比较有趣的解释，觉有应该记录一下。:)</p>
+<p>I wrote this answer down because I thought this would be a fun (and fitting) analogy:</p>
+<p>Think of a lockable object as a <em>blackboard</em> (lockable) in a class room containing a <em>teacher</em> (writer) and many <em>students</em> (readers).</p>
+<p>While a teacher is writing something (exclusive lock) on the board:</p>
+<p>Nobody can read it, because it’s still being written, and she’s blocking your view =&gt; <em>If an object is exclusively locked, shared locks cannot be obtained.</em></p>
+<p>Other teachers won’t come up and start writing either, or the board becomes unreadable, and confuses students =&gt; <em>If an object is exclusively locked, other exclusive locks cannot be obtained.</em></p>
+<p>When the students are reading (shared locks) what is on the board:</p>
+<p>They all can read what is on it, together =&gt; <em>Multiple shared locks can co-exist.</em></p>
+<p>The teacher waits for them to finish reading before she clears the board to write more =&gt; <em>If one or more shared locks already exist, exclusive locks cannot be obtained.</em></p>
+
+        
+      
+    </div>
+
+    <div class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </div>
+  </div>
+
+
+    
+      
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
               <a class="post-title-link" href="/2015/07/28/MySQL数据类型/">
                 MySQL数据类型
               </a>
@@ -232,93 +318,6 @@
 
 
     
-      
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/07/26/MySQL数据类型选择/">
-                MySQL数据类型选择
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于 2015-07-26
-        </span>
-
-        
-          <span class="post-category">
-            &nbsp; | &nbsp; 分类于
-            
-              <a href="/categories/MySQL/">MySQL</a>
-
-              
-              
-                ， 
-              
-
-            
-              <a href="/categories/MySQL/数据库/">数据库</a>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </div>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>因为MySQL支持的数据类型很多，在数据库建表时，选择方案也就很多，每种都可以作为需求列的存储类型，但是确不是最合适的，选择<strong>正确的、合适的数据类型对于获得高性能是至关重要</strong>的。在做数据类型选择时有以下几条原则：</p>
-<ul>
-<li><p><strong>大的不一定是最好的</strong><br>服务器总是繁忙的，能省事点就应该省事点。在数据类型的数据范围内能够满足需求不会溢出的前提下，我们应该优先考虑最小数据类型。因为小数据类型相比大数据类型，它们占用更少的磁盘、内存和CPU缓存空间，并且处理小数据类型的数据是占用CPU周期也更少。这也正是我们优化数据库所想要看到的结果，既然可以达到这样的效果，为什么不用呢？</p>
-</li>
-<li><p><strong>大简至美，大美至简</strong><br>复杂的事物对于我们来说，思考的就要更多，脑细胞就死的更快。这对于计算机是同理的，复杂的数据类型计算量会比简单的数据类型要大。所以简单的数据类型相比复杂的数据类型占用CPU周期更少。例如，整形运算要比字符类型操作简单。两个例子，一个是使用MySQL内建的类型存储时间日期，而不是字符串；另一个是用整形类型存储IP地址，PHP中通过ip2long()，long2ip()两个函数来对IP地址进行转换。</p>
-</li>
-<li><p><strong>丑陋的NULL</strong><br>在不是非常需要NULL值得情况下，在建表时尽量将列指定为NOT NULL。在MySQL中，存在NULL值的列存在以下缺点：<br>⒈ 如果查询中包含可为NULL的列时，对MySQL优化器来说是痛苦的，因为可为NULL列上的索引、索引统计和值都比较复杂，这前面一点说过了，能简单点就不要给自己使绊搞那么复杂。<br>⒉ 可为NULL值得列在存储数据时会占用更多的存储空间，而且在MySQL中还特么要特殊处理，这你能忍？<br>⒊ 当可为NULL的列被索引时，每个索引记录需要一个额外的字节，在MyISAM里甚至还可能导致固定大小的索引变成可变大小的索引。</p>
-</li>
-</ul>
-<p>不同的数据类型，存储的长度和范围不一样、允许的精度不一样，或者需要的物理空间不同，相同的大类型不同的小类型有时也有一些特殊的行为和属性，这些完全要看实际环境和需求来确定。所以选择合适的数据类型在数据库建立和优化中也是重要的一个环节。</p>
-
-        
-      
-    </div>
-
-    <div class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </div>
-  </div>
-
-
-    
   </div>
 
   
@@ -357,14 +356,14 @@
         <div class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-count">12</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>

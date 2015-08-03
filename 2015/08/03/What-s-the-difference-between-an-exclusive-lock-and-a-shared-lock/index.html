@@ -22,7 +22,7 @@
 
 
 
-  <meta name="keywords" content="Hexo,next" />
+  <meta name="keywords" content="mysql," />
 
 
 
@@ -45,7 +45,7 @@
 
 
 
-  <title> Patrick </title>
+  <title> What's the difference between an exclusive lock and a shared lock? // Patrick </title>
 </head>
 
 <body>
@@ -59,9 +59,7 @@
   </div>
 <![endif]-->
 
-  <div class="container one-column 
-   page-home 
-">
+  <div class="container one-column page-post-detail">
     <div class="headband"></div>
 
     <div id="header" class="header">
@@ -137,9 +135,9 @@
       <div class="main-inner">
         <div id="content" class="content">
           
+
   <div id="posts" class="posts-expand">
     
-      
 
   <div class="post post-type-normal ">
     <div class="post-header">
@@ -150,9 +148,7 @@
           
           
             
-              <a class="post-title-link" href="/2015/07/10/TCP-IP协议基础/">
-                TCP/IP协议基础
-              </a>
+              What's the difference between an exclusive lock and a shared lock?
             
           
         </h1>
@@ -160,14 +156,22 @@
 
       <div class="post-meta">
         <span class="post-time">
-          发表于 2015-07-10
+          发表于 2015-08-03
         </span>
 
         
           <span class="post-category">
             &nbsp; | &nbsp; 分类于
             
-              <a href="/categories/协议/">协议</a>
+              <a href="/categories/mysql/">mysql</a>
+
+              
+              
+                ， 
+              
+
+            
+              <a href="/categories/mysql/数据库/">数据库</a>
 
               
               
@@ -188,110 +192,58 @@
       
 
       
-        
-          <h4 id="一、TCP/IP是什么？">一、TCP/IP是什么？</h4><p>　　全称：传输控制协议（Transmission Control Protocol）/互联网协议（Internet Protocol）<br>　　它可以指代一个TCP/IP参考模型，也可以指代一个协议，也可以指代一个协议族。</p>
-<ul>
-<li><strong>TCP/IP参考模型</strong><br><img src="http://int64ago.qiniudn.com/or7sbdquxr.png" alt="图1"><br>每一层均有许多不同的协议组成，各层实现各自的功能时，可以使用直接下层提供的服务，同时也要给直接上层提供服务。</li>
-<li><strong>TCP/IP协议族</strong><br>指整个网络传输协议的集合</li>
-<li><strong> TCP/IP协议 </strong><br>TCP协议位于第四层传输层；IP协议，又称网际协议或互联网协议，位于第三层</li>
-</ul>
-<h4 id="二、为什么会有TCP/IP协议？">二、为什么会有TCP/IP协议？</h4><p>　　互联网由许多个小网络组成，每个小网络都有自己的结构和规则，就相当于世界各地的“方言”，当两个不同区域的人相遇时就会交流困难，为了解决交流问题就需要一门“世界语”，而这门“世界语”就是TCP/IP协议。</p>
-<h4 id="三、TCP/IP工作原理">三、TCP/IP工作原理</h4><ul>
-<li><strong>各层协议之间的协作关系</strong><br><img src="http://int64ago.qiniudn.com/qt6prk71iqkt9.jpg" alt="图2"></li>
-<li><strong>数据包的封装与解封</strong><br><img src="http://int64ago.qiniudn.com/f76khcvezsemi.jpg" alt="图3"><br>　　当应用程序调用TCP或者UDP协议发送数据包时，用户数据被送入TCP/IP协议栈，自上而下通过每一层，直到数据转为一串比特流被送入网络。在每一层接收到数据后，都会加上一些头部信息或者尾部信息以完成数据包的封装。<br><img src="http://int64ago.qiniudn.com/dhgh5nu1y8pvi.jpg" alt="图4"><br>　　拆封过程则是自下而上一层一层的拆开每一层的首部信息，最后得到被传输的应用数据</li>
-</ul>
-<h4 id="四、三次握手">四、三次握手</h4><p>　　TCP协议是针对主机对主机的传输层协议，提供可靠的连接服务，采用三次握手确认建立一个连接。<br><img src="http://int64ago.qiniudn.com/57eylmhkc5wmi.png" alt="图5"><br>　　通过wireshark捕捉网络数据包，结果如下：<br><img src="http://int64ago.qiniudn.com/cyzubjp58kt9.jpg" alt="图6"><br>　　115.231.94.62即 class.oschina.mopaas.com的主机地址。通过数据显示能够发现，在建立HTTP连接之前先建立了TCP连接，这说明http协议是建立在tcp协议基础之上的。<br>Seq：Sequence Number 序列号。<br>Ack：Acknowledgement Number 确定号。<br>1、（第一次握手）在No.8961中，本地主机发送[SYN]数据报，序列号Seq=0，代表本地主机，即客户端通过端口51344请求远程主机端口80建立连接。<br>2、（第二次握手）在No.8962中，远程主机发送[SYN+ACK]报文，序列号Seq=0，确定号Ack=1(Seq+1)，回复本地主机。<br>3、（第三次握手）在No.8963中，本地主机接到远程主机的回复后，发送ACK报文，序列号Seq=1，确定号Ack=1，回复远程主机。<br>4、TCP连接成功，建立HTTP连接。</p>
+        <p>对于共享（读）锁和排他（写）锁，在<a href="http://stackoverflow.com/questions/11837428/whats-the-difference-between-an-exclusive-lock-and-a-shared-lock" target="_blank" rel="external">stackoverflow</a>上看到一个比较有趣的解释，觉有应该记录一下。:)</p>
+<p>I wrote this answer down because I thought this would be a fun (and fitting) analogy:</p>
+<p>Think of a lockable object as a <em>blackboard</em> (lockable) in a class room containing a <em>teacher</em> (writer) and many <em>students</em> (readers).</p>
+<p>While a teacher is writing something (exclusive lock) on the board:</p>
+<p>Nobody can read it, because it’s still being written, and she’s blocking your view =&gt; <em>If an object is exclusively locked, shared locks cannot be obtained.</em></p>
+<p>Other teachers won’t come up and start writing either, or the board becomes unreadable, and confuses students =&gt; <em>If an object is exclusively locked, other exclusive locks cannot be obtained.</em></p>
+<p>When the students are reading (shared locks) what is on the board:</p>
+<p>They all can read what is on it, together =&gt; <em>Multiple shared locks can co-exist.</em></p>
+<p>The teacher waits for them to finish reading before she clears the board to write more =&gt; <em>If one or more shared locks already exist, exclusive locks cannot be obtained.</em></p>
 
-        
       
     </div>
 
     <div class="post-footer">
       
-
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/"> #mysql </a>
+          
+        </div>
       
 
       
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/07/28/MySQL数据类型/">MySQL数据类型</a>
+            
+          </div>
+        </div>
       
-        <div class="post-eof"></div>
+
+      
       
     </div>
   </div>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+
     
-      
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/07/01/hello-world/">
-                Hello World
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于 2015-07-01
-        </span>
-
-        
-
-        
-          
+      <div class="comments" id="comments">
         
       </div>
-    </div>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-        
-      
-    </div>
-
-    <div class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </div>
-  </div>
-
-
     
-  </div>
-
-  
-  <div class="pagination">
-    <a class="extend prev" rel="prev" href="/p/5/">&laquo;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/p/5/">5</a><span class="page-number current">6</span>
   </div>
 
 
@@ -314,6 +266,15 @@
   <div id="sidebar" class="sidebar">
     <div class="sidebar-inner">
 
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
       
 
       <div class="site-overview">
@@ -371,6 +332,17 @@
         
       </div>
 
+      
+        <div class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </div>
       
 
     </div>
@@ -434,6 +406,145 @@
   <script type="text/javascript" src="/js/search-toggle.js"></script>
 
   
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.3" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var $sidebarInner = $('.sidebar-inner');
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.didShow', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      var $tocContent = $('.post-toc-content');
+      if (isDesktop() && CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    });
+  </script>
+
+
+
 
   <script type="text/javascript">
     $(document).ready(function () {

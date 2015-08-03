@@ -150,6 +150,93 @@
           
           
             
+              <a class="post-title-link" href="/2015/07/26/MySQL数据类型选择/">
+                MySQL数据类型选择
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-07-26
+        </span>
+
+        
+          <span class="post-category">
+            &nbsp; | &nbsp; 分类于
+            
+              <a href="/categories/MySQL/">MySQL</a>
+
+              
+              
+                ， 
+              
+
+            
+              <a href="/categories/MySQL/数据库/">数据库</a>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>因为MySQL支持的数据类型很多，在数据库建表时，选择方案也就很多，每种都可以作为需求列的存储类型，但是确不是最合适的，选择<strong>正确的、合适的数据类型对于获得高性能是至关重要</strong>的。在做数据类型选择时有以下几条原则：</p>
+<ul>
+<li><p><strong>大的不一定是最好的</strong><br>服务器总是繁忙的，能省事点就应该省事点。在数据类型的数据范围内能够满足需求不会溢出的前提下，我们应该优先考虑最小数据类型。因为小数据类型相比大数据类型，它们占用更少的磁盘、内存和CPU缓存空间，并且处理小数据类型的数据是占用CPU周期也更少。这也正是我们优化数据库所想要看到的结果，既然可以达到这样的效果，为什么不用呢？</p>
+</li>
+<li><p><strong>大简至美，大美至简</strong><br>复杂的事物对于我们来说，思考的就要更多，脑细胞就死的更快。这对于计算机是同理的，复杂的数据类型计算量会比简单的数据类型要大。所以简单的数据类型相比复杂的数据类型占用CPU周期更少。例如，整形运算要比字符类型操作简单。两个例子，一个是使用MySQL内建的类型存储时间日期，而不是字符串；另一个是用整形类型存储IP地址，PHP中通过ip2long()，long2ip()两个函数来对IP地址进行转换。</p>
+</li>
+<li><p><strong>丑陋的NULL</strong><br>在不是非常需要NULL值得情况下，在建表时尽量将列指定为NOT NULL。在MySQL中，存在NULL值的列存在以下缺点：<br>⒈ 如果查询中包含可为NULL的列时，对MySQL优化器来说是痛苦的，因为可为NULL列上的索引、索引统计和值都比较复杂，这前面一点说过了，能简单点就不要给自己使绊搞那么复杂。<br>⒉ 可为NULL值得列在存储数据时会占用更多的存储空间，而且在MySQL中还特么要特殊处理，这你能忍？<br>⒊ 当可为NULL的列被索引时，每个索引记录需要一个额外的字节，在MyISAM里甚至还可能导致固定大小的索引变成可变大小的索引。</p>
+</li>
+</ul>
+<p>不同的数据类型，存储的长度和范围不一样、允许的精度不一样，或者需要的物理空间不同，相同的大类型不同的小类型有时也有一些特殊的行为和属性，这些完全要看实际环境和需求来确定。所以选择合适的数据类型在数据库建立和优化中也是重要的一个环节。</p>
+
+        
+      
+    </div>
+
+    <div class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </div>
+  </div>
+
+
+    
+      
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
               <a class="post-title-link" href="/2015/07/15/乐观锁与悲观锁/">
                 乐观锁与悲观锁
               </a>
@@ -225,91 +312,6 @@
 
 
     
-      
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/07/10/http和https/">
-                HTTP和HTTPS协议
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于 2015-07-10
-        </span>
-
-        
-          <span class="post-category">
-            &nbsp; | &nbsp; 分类于
-            
-              <a href="/categories/协议/">协议</a>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </div>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h3 id="HTTP和HTTPS协议">HTTP和HTTPS协议</h3><p>　　HTTP和HTTPS协议是大家长期接触到的两个协议，在大家的熟知里，这两者的区别就在安全性，端口不同上。大家知道的都是体现在表层的东西，却不知道这背后的机制和原理。为什么HTTPS比HTTP安全，这个安全性源自哪里？</p>
-<h4 id="概念">概念</h4><p>　　超文本传输协议（HyperText Transfer Protocol， 简称：HTTP）。互联网上应用最为广泛的一种网络协议，它是一个客户端和服务端之间对话的标准，属于TCP/IP <strong>应用层</strong> 协议。一般情况下，web请求和响应都采用HTTP协议传输，HTTP协议默认不采用加密协议的原因有以下几个：加密消耗很多计算机资源；加密占更多的带宽，加密后缓存机制会失效。</p>
-<h4 id="区别">区别</h4><p>　　HTTPS是基于HTTP的安全超文本传输协议，用于客户机和服务器之间的信息交流。主要区别如下：</p>
-<ul>
-<li>连接方式不同，HTTP端口80，HTTPS端口443。</li>
-<li>HTTPS协议需要申请证书。</li>
-<li>HTTP协议传输过程中以明文传递，HTTPS传输过程中则通过安全的ssl加密传递。</li>
-<li>HTTPS是由SSL+HTTP构建的安全的网络传输协议，比HTTP协议安全性高。</li>
-</ul>
-<h4 id="工作原理">工作原理</h4><p>　　HTTP的工作原理在之前的TCP/IP协议中已经记录过，基于TCP/IP协议三次握手后建立连接。而HTTPS的连接方式要比HTTP复杂一些，大致流程如下：<br>① 浏览器发送一个连接请求给安全服务器。<br>② 采用HTTPS协议的服务器必须有一套自己的数字证书，用户客户端的验证。接收到HTTPS请求后，服务器将自己的证书，以及同证书相关的信息（包含公钥，证书有效期，颁发机构等）发送给客户浏览器。<br>③ 客户浏览器检查服务器送过来的证书是否是由自己信赖的 CA 中心所签发的。如果是，就继续执行协议；如果不是，客户浏览器就给客户一个警告消息：警告客户这个证书不是可以信赖的，询问客户是否需要继续。<br>④ 接着客户浏览器比较证书里的消息，例如域名和公钥，与服务器刚刚发送的相关消息是否一致，如果是一致的，客户浏览器认可这个服务器的合法身份。<br>⑤ 服务器要求客户发送客户自己的证书（公钥）。收到后，服务器验证客户的证书，如果没有通过验证，拒绝连接；如果通过验证，服务器获得用户的公钥。<br>⑥ 客户浏览器告诉服务器自己所能够支持的通讯对称密码方案。<br>⑦ 服务器从客户发送过来的密码方案中，选择一种加密程度最高的密码方案，用客户的公钥加过密后通知浏览器。<br>⑧ 浏览器针对这个密码方案，选择一个通话密钥，接着用服务器的公钥加过密后发送给服务器。<br>⑨ 服务器接收到浏览器送过来的消息，用自己的私钥解密，获得通话密钥。<br>⑩ 服务器、浏览器接下来的通讯都是用对称密码方案，对称密钥是加过密的。<br><img src="http://int64ago.qiniudn.com/1cqm0nyntrzfr.png" alt="图1"><br><img src="http://int64ago.qiniudn.com/yg8zt3px2yb9.png" alt="图2"><br>大致的交互过程就是：首先客户机和服务器之间通过交换证书（公钥），然后通过非对称加密方式交换密钥，没有问题后使用对称加密方式进行通信。<br>双方相互信任后采用对称加密算法应该是因为对称加密算法计算量小、加密速度快、加密效率高。</p>
-<p>文献资料：</p>
-<ul>
-<li><a href="http://www.ruanyifeng.com/blog/2011/02/seven_myths_about_https.html" target="_blank" rel="external">HTTPS的七大误解</a></li>
-<li><a href="http://www.cnblogs.com/TankXiao/archive/2012/02/13/2342672.html" target="_blank" rel="external">HTTP协议系列讲解</a></li>
-<li><a href="http://www.ruanyifeng.com/blog/2014/02/ssl_tls.html" target="_blank" rel="external">SSL/TLS协议运行机制</a></li>
-</ul>
-
-        
-      
-    </div>
-
-    <div class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </div>
-  </div>
-
-
-    
   </div>
 
   
@@ -348,14 +350,14 @@
         <div class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-count">12</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
